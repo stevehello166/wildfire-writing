@@ -1,0 +1,34 @@
+{
+    "$schema": "https://raw.githubusercontent.com/MoAlyousef/fltk-decl/main/schemas/fltk-schema.json", 
+
+
+    "widget": "Column",
+    "children": [
+        {
+            "widget": "SysMenuBar",
+            "label": "no",
+
+            "fixed": 25,
+            "id": "menubar"
+        },
+        {
+            "widget": "Row",
+            "children": [
+                {
+                    "widget": "Button",
+                    "label": "Character Module",
+                    "selectioncolor": "x00FF00",
+                    "fixed": 200
+                }
+            ]
+        },
+        {
+            "widget": "Frame",
+            "fixed": 12
+        },
+        {
+            "widget": "Frame",
+            "fixed": 200
+        }
+    ]
+}
