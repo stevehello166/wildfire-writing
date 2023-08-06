@@ -1,4 +1,4 @@
-use std::fs::File;
+use std::{fs::File, string};
 use fltk::dialog;
 
 use crate::OPERATING_SYSTEM;
@@ -33,4 +33,15 @@ pub fn create_file(file_type: &str) {
 
     let mut _temp = File::create(folder_dir) 
         .expect("Error encountered while creating file!");
+}
+
+pub fn open_file() -> String {
+    let mut file_dir =  dialog::NativeFileChooser::new(dialog::NativeFileChooserType::BrowseFile);
+    file_dir.show();
+    let file_dir = file_dir
+    .filename()
+    .into_os_string()
+    .into_string()
+    .unwrap();
+    file_dir
 }
