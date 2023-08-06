@@ -1,7 +1,7 @@
-use std::{fs::File, string};
+use std::fs::File;
 use fltk::dialog;
 
-use crate::OPERATING_SYSTEM;
+//use crate::OPERATING_SYSTEM;
 
 /*
 This module is a simple utility allowing me to easily create files and associated dialogs
@@ -9,7 +9,12 @@ This module is a simple utility allowing me to easily create files and associate
 KNOWN ISSUES
 code panics if cancel is pressed instead of inputting values
 */
-
+/*
+enum FileErr {
+    Ok(T),
+    Err(E)
+}
+*/
 pub fn create_file(file_type: &str) {
     let file_name = dialog::input(100, 100, "Input Name Of File", "Error");
     let mut folder_dir =  dialog::NativeFileChooser::new(dialog::NativeFileChooserType::BrowseDir);

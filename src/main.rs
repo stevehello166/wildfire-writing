@@ -1,6 +1,8 @@
 // the Import block
 mod file_manipulation;
 use file_manipulation::*;
+mod help;
+use help::*;
 
 use fltk::{
     app,
@@ -9,7 +11,8 @@ use fltk::{
     menu, menu::*, 
     enums::*, 
     group::{FlexType::Row, ScrollType},
-    button::Button
+    button::Button,
+    dialog::HelpDialog
     };
 
 use std::env;
@@ -25,6 +28,11 @@ fn menu_cb(m: &mut impl MenuExt){
             "New Note\t" => create_file(".md"),
             "Open\t" =>  file_str = open_file(),
             "Third" => println!("Third"),
+            "Help" => {
+                let mut help = HelpDialog::new(0,0, 1600, 900);
+                help.load("/resources/help/main.html");
+                help.show();
+            },
             "Quit\t" => {
                 println!("Quitting");
                 app::quit();
@@ -37,10 +45,10 @@ fn menu_cb(m: &mut impl MenuExt){
 
 fn main() {
     println!("{}", OPERATING_SYSTEM);
-    let a = app::App::default();
+    let a = app::App::default().with_scheme(app::Scheme::Plastic);
     // all the widgets for the window
-    let mut wind = Window::new(720, 1280, 400, 300, APP_NAME);
-    let mut menubar = SysMenuBar::new(0,0,400, 25, APP_NAME);
+    let mut wind = Window::new(720, 1280, 1600, 900, APP_NAME);
+    let mut menubar = SysMenuBar::new(0,0,1600, 25, APP_NAME);
 
     let open_file_str: String;
     // menu bar stuff
@@ -66,6 +74,20 @@ fn main() {
         Shortcut::None,
         menu::MenuFlag::Normal,
         menu_cb
+    );
+    menubar.add(
+        "Help\t",
+        Shortcut::None,
+        menu::MenuFlag::Normal,
+        |_| {
+            let mut help = HelpDialog::new(0,0, 1600, 900);
+            help.load("resources/help/main.html");
+            help.show();
+
+            while help.shown(){
+                app::wait();
+            }
+        }
     );
 
     let mut divider = Row;
