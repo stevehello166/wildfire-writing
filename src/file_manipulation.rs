@@ -16,7 +16,7 @@ enum FileErr {
 }
 */
 pub fn create_file(file_type: &str) {
-    let file_name = dialog::input(100, 100, "Input Name Of File", "Error");
+    let file_name = dialog::input(100, 100, "Input Name Of File", "");
     let mut folder_dir =  dialog::NativeFileChooser::new(dialog::NativeFileChooserType::BrowseDir);
     folder_dir.show();
 
