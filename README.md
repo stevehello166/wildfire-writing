@@ -7,8 +7,4 @@ view mode to visualise connections between different parts of the worldbuilding 
  - more coming
 
 # How to contribute
-#### For programmers
-- create a issue with the code enclosed and a title starting with ["CODE"]
-
-#### For anyone else
-- report bugs and suggest features
+Suggest features, contribute __working__ code or report bugs.

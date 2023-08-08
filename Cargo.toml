@@ -1,5 +1,5 @@
 [package]
-name = "Wildfire-Write"
+name = "wildfire_write"
 version = "0.1.0"
 edition = "2021"
 

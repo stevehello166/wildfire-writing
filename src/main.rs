@@ -11,7 +11,6 @@ use fltk::{
     button::Button,
     dialog::HelpDialog,
     group,
-    frame,
     button,
     dialog
     };
@@ -98,20 +97,16 @@ fn main() {
     let mut side_menu_opt = group::Pack::default_fill();
     side_menu_opt.set_spacing(5);
 
-    for i in 0..2 {
-        //variables for creating the side menu
-        let module_num: String = i.to_string();
-        let module_num: String = "module".to_string() + module_num.as_str();
-        let module_name: [&str; 2] = ["Character Module", "Timeline Module"];
+    // originally i was going to write a highly complex block of code here to automate the creation of module buttons, however this is easier
+    let module_name: [&str; 2] = ["Character Module", "Timeline_Module"];
+    let mut character_module_button = Button::new(0,25, 256, 50, module_name[0]);
 
-        //Creates the buttons
-        button::Button::default().with_size(0, 80).with_label(module_name[i]).set_id(&module_num);
-    }
     side_menu.end();
     
     //The module window
     let mut module_menu = Window::new(256,25, 1344, 875, "");
 
+    character_module_button.set_callback(move|_| println!("works"));
     module_menu.end();
 
     wind.end();

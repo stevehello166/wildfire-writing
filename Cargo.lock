@@ -3,13 +3,6 @@
 version = 3
 
 [[package]]
-name = "Wildfire-Write"
-version = "0.1.0"
-dependencies = [
- "fltk",
-]
-
-[[package]]
 name = "bitflags"
 version = "2.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -89,3 +82,10 @@ name = "ttf-parser"
 version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a464a4b34948a5f67fddd2b823c62d9d92e44be75058b99939eae6c5b6960b33"
+
+[[package]]
+name = "wildfire_write"
+version = "0.1.0"
+dependencies = [
+ "fltk",
+]
