@@ -7,4 +7,14 @@ view mode to visualise connections between different parts of the worldbuilding 
  - more coming
 
 # How to contribute
-Suggest features, contribute __working__ code or report bugs.
+todo.
+
+# How to build
+1. Run git clone on this repository.
+2. cd into the cloned directory
+3. run `cargo run` or `cargo build` 
+
+# Build Dependancies 
+For debian based distributions
+`sudo apt-get install libx11-dev libxext-dev libxft-dev libxinerama-dev libxcursor-dev libxrender-dev libxfixes-dev libpango1.0-dev libgl1-mesa-dev libglu1-mesa-dev`
+
