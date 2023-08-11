@@ -8,12 +8,13 @@ use fltk::{
     window::Window, 
     menu, menu::*, 
     enums::*,
-    button::{Button, self},
+    button::Button,
     dialog::HelpDialog,
     group,
-    dialog
+    dialog,
+    frame::*
     };
-use std::{env, thread};
+use std::env;
 
 pub const OPERATING_SYSTEM: &str = env::consts::OS;
 pub const APP_NAME: &str = "Wildfire Write";
@@ -93,7 +94,24 @@ fn main() {
             }
         }
     );
-
+    let app_clone = a.clone();
+    menubar.add(
+        "Preferences/Set Theme/GTK\t",
+        Shortcut::None,
+        menu::MenuFlag::Normal,
+        move|_| {
+            app_clone.with_scheme(app::Scheme::Gtk);
+        }
+    );
+    let app_clone = a.clone();
+    menubar.add(
+        "Preferences/Set Theme/Oxy\t",
+        Shortcut::None,
+        menu::MenuFlag::Normal,
+        move|_| {
+            app_clone.with_scheme(app::Scheme::Oxy);
+        }
+    );
 
     let mut side_menu = Window::new(0, 25, 256, 875, "");
     side_menu.set_color(Color::Black);
@@ -101,7 +119,7 @@ fn main() {
     side_menu_opt.set_spacing(0);
 
     // originally i was going to write a highly complex block of code here to automate the creation of module buttons, however this is easier
-    let module_name: [&str; 2] = ["Character Module", "Timeline_Module"];
+    let module_name: [&str; 2] = ["Characters", "World Timeline(NYI)"];
     let mut character_module_button = Button::new(0,25, 256, 50, module_name[0]);
     let mut timeline_module_button = Button::new(0,25, 256, 50, module_name[1]);
 
@@ -113,26 +131,42 @@ fn main() {
     character_module_menu.set_color(Color::Magenta);
     character_module_menu.begin();
 
-    let mut open_character_note_button = Button::new(0,0, 192, 64, "Open Character .json");
+    // Character module UI
+    let mut cm_side_bar = Window::new(0, 0, 192, 825, "");
+    cm_side_bar.begin();
+    let mut cm_side_bar_pack = group::Pack::default_fill();
+    let mut open_character_note_button = Button::new(0,0, 192, 60, "Open Character .json");
+    let mut cm_side_bar_frame = Frame::new(0, 60, 192, 60, "");
+    
+
+    side_menu_opt.set_spacing(0);
+    cm_side_bar.end();
+
+    cm_side_bar.hide();
     open_character_note_button.hide();
 
     // this chunk of code allows for opening of character jsons
     let mut character_file_to_open:String = String::new();
     open_character_note_button.set_callback(move|_| {
+
         character_file_to_open = open_file();
-        println!("{}", character_file_to_open)
+        println!("{}", character_file_to_open);
     });
 
     // Cloning the button to create independent copies for each closure
     let mut open_character_note_button_show = open_character_note_button.clone();
+    let mut cm_side_bar_show = cm_side_bar.clone();
     // Using the cloned button in the character_module_button callback
     character_module_button.set_callback(move |_|{
         open_character_note_button_show.show();
+        cm_side_bar_show.show();
     });
 
     let mut open_character_note_button_hide_0 = open_character_note_button.clone();
+    let mut cm_side_bar_hide_0 = cm_side_bar.clone();
     timeline_module_button.set_callback(move |_|{
-        open_character_note_button_hide_0.hide();            
+        open_character_note_button_hide_0.hide();
+        cm_side_bar_hide_0.hide();    
     });
 
     character_module_menu.end();
