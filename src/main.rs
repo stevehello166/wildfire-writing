@@ -122,7 +122,7 @@ fn main() {
         menu::MenuFlag::Normal,
         |_|{
             let mut help_license = HelpDialog::new(0,0, 1600, 900);
-            help_license.load("resources/help/liscense.html");
+            help_license.load("resources/help/license.html");
             help_license.show();  
             while help_license.shown(){
                 app::wait();
