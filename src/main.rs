@@ -1,26 +1,28 @@
 /*
-Wildfire Write, a free and opensource writing software made for writers, inspired by campfire write and world anvil.
+Wildfire Write, a free and open source writing software to keep your worldbuilding organized, inspired by campfire write and world anvil.
 (C) 2023
 Nadichamp
-This program is free software: you can redistribute it and/or modify
-        it under the terms of the GNU General Public License as published by
-        the Free Software Foundation, either version 3 of the License, or
-        (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
     
-        This program is distributed in the hope that it will be useful,
-        but WITHOUT ANY WARRANTY; without even the implied warranty of
-        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-        GNU General Public License for more details.
-    
-        You should have received a copy of the GNU General Public License
-        along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 
 
 // the Import block
 mod file_manipulation;
+mod theme_and_decoration;
 use file_manipulation::*;
+use theme_and_decoration::*;
 
 use fltk::{
     app,
@@ -60,8 +62,8 @@ fn menu_cb(m: &mut impl MenuExt){
             _ => println!("{}", choice),
         }
     }
-    
 }
+
 
 fn main() {
     println!("{}", OPERATING_SYSTEM);
@@ -101,7 +103,7 @@ fn main() {
         menu_cb
     );
     menubar.add(
-        "Help/How To Use\t",
+        "Help/About\t",
         Shortcut::None,
         menu::MenuFlag::Normal,
         |_| {
@@ -127,22 +129,53 @@ fn main() {
             }         
         }
     );
-    let app_clone = a.clone();
     menubar.add(
         "Preferences/Set Theme/GTK\t",
         Shortcut::None,
         menu::MenuFlag::Normal,
-        move|_| {
-            app_clone.with_scheme(app::Scheme::Gtk);
+        move |_| {
+            let app_clone = a.clone();
+            theme_button_callbacks(app_clone, "GTK");
         }
     );
-    let app_clone = a.clone();
+
     menubar.add(
         "Preferences/Set Theme/Oxy\t",
         Shortcut::None,
         menu::MenuFlag::Normal,
-        move|_| {
-            app_clone.with_scheme(app::Scheme::Oxy);
+        move |_| {
+            let app_clone = a.clone();
+            theme_button_callbacks(app_clone, "OXY");
+        }
+    );
+
+    menubar.add(
+        "Preferences/Set Theme/Base\t",
+        Shortcut::None,
+        menu::MenuFlag::Normal,
+        move |_| {
+            let app_clone = a.clone();
+            theme_button_callbacks(app_clone, "BAS");
+        }
+    );
+
+    menubar.add(
+        "Preferences/Set Theme/Plastic\t",
+        Shortcut::None,
+        menu::MenuFlag::Normal,
+        move |_| {
+            let app_clone = a.clone();
+            theme_button_callbacks(app_clone, "PLA");
+        }
+    );
+
+    menubar.add(
+        "Preferences/Set Theme/Gleam\t",
+        Shortcut::None,
+        menu::MenuFlag::Normal,
+        move |_| {
+            let app_clone = a.clone();
+            theme_button_callbacks(app_clone, "GLE");
         }
     );
 

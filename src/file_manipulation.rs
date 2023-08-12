@@ -20,6 +20,7 @@ pub fn create_file(file_type: &str) {
     let mut folder_dir =  dialog::NativeFileChooser::new(dialog::NativeFileChooserType::BrowseDir);
     folder_dir.show();
 
+
     //Folder_dir panics when cancel is pressed on the open folder dialog.
     //Makes folder_dir and file_name the same type of string.
     let folder_dir = folder_dir
@@ -27,6 +28,7 @@ pub fn create_file(file_type: &str) {
         .into_os_string()
         .into_string()
         .unwrap();
+ 
     let mut file_name = file_name.unwrap();
     let file_name = file_name.as_mut_str();
 
