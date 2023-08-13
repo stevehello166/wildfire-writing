@@ -19,24 +19,15 @@ Nadichamp
 
 
 // the Import block
-mod file_manipulation;
-mod theme_and_decoration;
+pub mod menu_manipulation;
+use menu_manipulation::*;
+pub mod file_manipulation;
 use file_manipulation::*;
-use theme_and_decoration::*;
+pub mod theme_and_decoration;
 
-use fltk::{
-    app,
-    prelude::*,
-    window::Window, 
-    menu, menu::*, 
-    enums::*,
-    button::Button,
-    dialog::HelpDialog,
-    group,
-    dialog,
-    frame::*
-    };
+use fltk_decl::*;
 use std::env;
+use fltk::{menu, menu::*, app, prelude::MenuExt};
 
 pub const OPERATING_SYSTEM: &str = env::consts::OS;
 pub const APP_NAME: &str = "Wildfire Write";
@@ -50,37 +41,30 @@ pub struct Configuration {
     pub side_bar_button_height: u32,
 }
 
-fn menu_cb(m: &mut impl MenuExt){
-    if let Some(choice) = m.choice() {
-        match choice.as_str() {
-            "New Note\t" => create_file(".md"),
-            "Third" => println!("Third"),
-            "Quit\t" => {
-                println!("Quitting");
-                app::quit();
-            },
-            _ => println!("{}", choice),
-        }
-    }
-}
 
 
 fn main() {
     println!("{}", OPERATING_SYSTEM);
-    let a = app::App::default();
-    dialog::message_title_default("Wildfire Write");
+    // portng to fltk decl something i should've done from the start
+    DeclarativeApp::new_json(200, 300, "wildfire_write", "resources/gui/gui.json").run(|_win|
+    {
+        if let Some(mut menu_bar) = app::widget_from_id::<menu::Choice>("menu_bar") {
+            menu_bar.add_choice("File|Edit|Preferences|License|File/Open");
+        }
+
+    }).unwrap();
+
     // all the widgets for the window
-    let mut wind = Window::new(720, 1280, 1600, 900, APP_NAME);
+    /*let mut wind = Window::new(720, 1280, 1600, 900, APP_NAME);
     let mut menubar = SysMenuBar::new(0,0,1600, 25, APP_NAME);
 
     // open file
-    let mut file_str:String = "".to_string();
+    let mut file_str:String = String::new();
     // menu bar stuff
-    menubar.add(
-        "File/New Note\t",
-        Shortcut::None,
-        menu::MenuFlag::Normal, 
-        menu_cb);
+    
+    let app_clone = a.clone();
+    add_to_menubar(menubar.clone(),app_clone);
+
     menubar.add(
         "File/Open\t",
         Shortcut::None,
@@ -90,156 +74,11 @@ fn main() {
             println!("{}", file_str);
         },
     );
-    menubar.add(
-        "File/Quit\t",
-        Shortcut::None,
-        menu::MenuFlag::Normal,
-        menu_cb,
-    );
-    menubar.add(
-       "Edit/Insert\t", 
-        Shortcut::None,
-        menu::MenuFlag::Normal,
-        menu_cb
-    );
-    menubar.add(
-        "Help/About\t",
-        Shortcut::None,
-        menu::MenuFlag::Normal,
-        |_| {
-            let mut help = HelpDialog::new(0,0, 1600, 900);
-            help.load("resources/help/main.html");
-            help.show();
 
-            while help.shown(){
-                app::wait();
-            }
-        }
-    );
-    menubar.add(
-        "Help/License\t",
-        Shortcut::None,
-        menu::MenuFlag::Normal,
-        |_|{
-            let mut help_license = HelpDialog::new(0,0, 1600, 900);
-            help_license.load("resources/help/license.html");
-            help_license.show();  
-            while help_license.shown(){
-                app::wait();
-            }         
-        }
-    );
-    menubar.add(
-        "Preferences/Set Theme/GTK\t",
-        Shortcut::None,
-        menu::MenuFlag::Normal,
-        move |_| {
-            let app_clone = a.clone();
-            theme_button_callbacks(app_clone, "GTK");
-        }
-    );
+    // turn this into a code module
 
-    menubar.add(
-        "Preferences/Set Theme/Oxy\t",
-        Shortcut::None,
-        menu::MenuFlag::Normal,
-        move |_| {
-            let app_clone = a.clone();
-            theme_button_callbacks(app_clone, "OXY");
-        }
-    );
-
-    menubar.add(
-        "Preferences/Set Theme/Base\t",
-        Shortcut::None,
-        menu::MenuFlag::Normal,
-        move |_| {
-            let app_clone = a.clone();
-            theme_button_callbacks(app_clone, "BAS");
-        }
-    );
-
-    menubar.add(
-        "Preferences/Set Theme/Plastic\t",
-        Shortcut::None,
-        menu::MenuFlag::Normal,
-        move |_| {
-            let app_clone = a.clone();
-            theme_button_callbacks(app_clone, "PLA");
-        }
-    );
-
-    menubar.add(
-        "Preferences/Set Theme/Gleam\t",
-        Shortcut::None,
-        menu::MenuFlag::Normal,
-        move |_| {
-            let app_clone = a.clone();
-            theme_button_callbacks(app_clone, "GLE");
-        }
-    );
-
-    let mut side_menu = Window::new(0, 25, 256, 875, "");
-    side_menu.set_color(Color::Black);
-    let mut side_menu_opt = group::Pack::default_fill();
-    side_menu_opt.set_spacing(0);
-
-    // originally i was going to write a highly complex block of code here to automate the creation of module buttons, however this is easier
-    let module_name: [&str; 2] = ["Characters", "World Timeline(NYI)"];
-    let mut character_module_button = Button::new(0,25, 256, 50, module_name[0]);
-    let mut timeline_module_button = Button::new(0,25, 256, 50, module_name[1]);
-
-    side_menu.end();
+    module_ui(a.clone());
     
-    //The module window
-
-    let mut character_module_menu = Window::new(256,25, 1344, 825, "");
-    character_module_menu.set_color(Color::Magenta);
-    character_module_menu.begin();
-
-    // Character module UI
-    let mut cm_side_bar = Window::new(0, 0, 192, 825, "");
-    cm_side_bar.begin();
-    let mut cm_side_bar_pack = group::Pack::default_fill();
-    let mut open_character_note_button = Button::new(0,0, 192, 60, "Open Character .json");
-    let mut cm_side_bar_frame = Frame::new(0, 60, 192, 60, "");
-    
-
-    side_menu_opt.set_spacing(0);
-    cm_side_bar.end();
-
-    cm_side_bar.hide();
-    open_character_note_button.hide();
-
-    // this chunk of code allows for opening of character jsons
-    let mut character_file_to_open:String = String::new();
-    open_character_note_button.set_callback(move|_| {
-
-        character_file_to_open = open_file();
-        println!("{}", character_file_to_open);
-    });
-
-    // Cloning the button to create independent copies for each closure
-    let mut open_character_note_button_show = open_character_note_button.clone();
-    let mut cm_side_bar_show = cm_side_bar.clone();
-    // Using the cloned button in the character_module_button callback
-    character_module_button.set_callback(move |_|{
-        open_character_note_button_show.show();
-        cm_side_bar_show.show();
-    });
-
-    let mut open_character_note_button_hide_0 = open_character_note_button.clone();
-    let mut cm_side_bar_hide_0 = cm_side_bar.clone();
-    timeline_module_button.set_callback(move |_|{
-        open_character_note_button_hide_0.hide();
-        cm_side_bar_hide_0.hide();    
-    });
-
-    character_module_menu.end();
-    
-
-    wind.end();
-    wind.show();
-    a.run().unwrap();
+    */
     //Runs at application close
 }
