@@ -1,13 +1,15 @@
 {
     "$schema": "https://raw.githubusercontent.com/MoAlyousef/fltk-decl/main/schemas/fltk-schema.json",
-    "widget": "window",
-    "h": 720,
-    "w": 1280,
-    "color": "magenta",
-    "id": "wind",
-    "children": [
-        {
-            "widget": "frame"
-        }
-    ]
+        "widget": "Window",
+        "h": 720,
+        "w": 1280,
+        "color": "magenta",
+        "id": "wind",
+        "children": [
+            {
+                "widget": "SysMenuBar",
+                "h":25,
+                "id": "menu_bar"
+            }
+        ]
 }
