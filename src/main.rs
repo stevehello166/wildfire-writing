@@ -45,6 +45,7 @@ fn menu_cb(m: &mut impl MenuExt){
     }
 }
 fn main() {
+    println!("Wildfire Write (C) 2023 nadichamp");
     DeclarativeApp::new_json(1280, 720, "Wildfire Write", "resources/gui/gui.json").run(|_win| 
         {
             if let Some (mut wind) = app::widget_from_id::<window::DoubleWindow>("wind"){
@@ -89,6 +90,41 @@ fn main() {
                         }         
                     }
                 );
+
+                if let Some(mut btn) = app::widget_from_id::<button::Button>("open_character_module") {
+                    btn.set_callback(btn_cb);
+                }
+                if let Some(mut btn) = app::widget_from_id::<button::Button>("open_manuscript") {
+                    btn.set_callback(btn_cb);
+                }
             }
         }).unwrap();
+}
+
+fn btn_cb(b: &mut button::Button) {
+    let mut window_shown: &str = "";
+    if b.label() == "Characters" {
+        window_shown = "character"
+    } else if b.label() == "Manuscript" {
+        window_shown = "manuscript"
+    }
+    hide_int_winds(window_shown)
+}
+
+fn hide_int_winds(s:&str) {
+    if let Some (mut wind) = app::widget_from_id::<window::DoubleWindow>("character_window"){
+        if s == "character"{
+            wind.show();
+        } else {
+            wind.hide();
+        }
+    }
+    if let Some (mut wind) = app::widget_from_id::<window::DoubleWindow>("manuscript_window"){
+        if s == "manuscript" {
+            wind.show();
+            wind.set_color(Color::Magenta)
+        } else {
+            wind.hide()
+        }
+    }
 }

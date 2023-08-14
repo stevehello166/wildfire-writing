@@ -10,6 +10,70 @@
                 "widget": "SysMenuBar",
                 "h":25,
                 "id": "menu_bar"
+            },
+            {
+                "widget": "Window",
+                "y": 25,
+                "w": 192,
+                "children": [
+                    {
+                        "widget": "Pack",
+                        "children": [
+                            {
+                                "widget": "Button",
+                                "h": 50,
+                                "label": "Characters",
+                                "id": "open_character_module"
+                            },
+                            {
+                                "widget": "Button",
+                                "h": 50,
+                                "label": "Timeline(NYI)",
+                                "id": "open_timeline_module"
+                            },
+                            {
+                                "widget": "Button",
+                                "h": 50,
+                                "label": "Manuscript",
+                                "id": "open_manuscript"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "widget": "Window",
+                "y": 25,
+                "x": 192,
+                "w": 1088,
+                "h": 695,
+                "hide": true,
+                "id": "character_window",
+                "children": [
+                    {
+                        "widget": "Button",
+                        "h": 25,
+                        "w": 50
+                    }
+                ]
+            },
+            {
+                "widget": "Window",
+                "y": 25,
+                "x": 192,
+                "w": 1088,
+                "h": 695,
+                "hide": true,
+                "id": "manuscript_window"
+            },
+            {
+                "widget": "GlutWindow",
+                "y": 25,
+                "x": 192,
+                "w": 1088,
+                "h": 695,
+                "hide": true,
+                "id": "manuscript_window"
             }
         ]
 }
