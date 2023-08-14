@@ -53,7 +53,8 @@
                     {
                         "widget": "Button",
                         "h": 25,
-                        "w": 50
+                        "w": 200,
+                        "label": "Open Character File"
                     }
                 ]
             },
@@ -64,7 +65,14 @@
                 "w": 1088,
                 "h": 695,
                 "hide": true,
-                "id": "manuscript_window"
+                "id": "manuscript_window",
+                "children": [
+                    {
+                        "widget": "TextEditor",
+                        "y": 30,
+                        "w": 1026
+                    }
+                ]
             },
             {
                 "widget": "GlutWindow",
@@ -73,7 +81,7 @@
                 "w": 1088,
                 "h": 695,
                 "hide": true,
-                "id": "manuscript_window"
+                "id": "timeline_window"
             }
         ]
 }

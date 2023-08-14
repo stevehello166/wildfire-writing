@@ -107,6 +107,8 @@ fn btn_cb(b: &mut button::Button) {
         window_shown = "character"
     } else if b.label() == "Manuscript" {
         window_shown = "manuscript"
+    } else if b.label() == "Timeline(NYI)" {
+        window_shown = "timeline"
     }
     hide_int_winds(window_shown)
 }
@@ -122,7 +124,7 @@ fn hide_int_winds(s:&str) {
     if let Some (mut wind) = app::widget_from_id::<window::DoubleWindow>("manuscript_window"){
         if s == "manuscript" {
             wind.show();
-            wind.set_color(Color::Magenta)
+            wind.set_color(Color::White)
         } else {
             wind.hide()
         }
