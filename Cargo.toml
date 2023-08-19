@@ -7,7 +7,8 @@ edition = "2021"
 
 [dependencies]
 
-fltk = "1.4.9"
-fltk-decl = { version = "0.2.6", features = ["json"] }
-serde = { version = "1.0.183", features = ["derive"] }
-serde_json = "1.0.104"
+gtk = { version = "0.7.2", package = "gtk4", features = ["v4_6"] }
+
+
+[build-dependencies]
+glib-build-tools = "0.18.0"
