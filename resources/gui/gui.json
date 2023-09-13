@@ -64,7 +64,9 @@
                 "w": 1088,
                 "h": 695,
                 "hide": true,
-                "id": "manuscript_window"
+                "id": "manuscript_window",
+                "color": "Magenta"
+                
             },
             {
                 "widget": "GlutWindow",
