@@ -16,138 +16,74 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 mod file_manipulation;
-mod theme_and_decoration;
 use file_manipulation::*;
-use theme_and_decoration::*;
 
-use fltk::{prelude::*, *, enums::*,dialog::*, text::TextEditor, utils::oncelock::Lazy, *};
-use fltk_decl::{DeclarativeApp,Widget};
+mod menu_stuff;
+use menu_stuff::*;
+
+
+use fltk::{prelude::*, *, enums::*, text::TextEditor, utils::oncelock::Lazy, menu::SysMenuBar};
 use std::{env, path::*};
 
+const HEIGHT: i32 = 900;
+const WIDTH: i32 = 1600;
 pub const OPERATING_SYSTEM: &str = env::consts::OS;
 pub const APP_NAME: &str = "Wildfire Write";
 
-static STATE: Lazy<app::GlobalState<State>> = Lazy::new(app::GlobalState::<State>::get);
-pub struct State {
+static STATE: Lazy<app::GlobalState<FileState>> = Lazy::new(app::GlobalState::<FileState>::get);
+pub struct FileState {
     pub saved: bool,
     pub buf: text::TextBuffer,
     pub current_file: PathBuf,
+    pub name: Option<String>
 }
 
-impl State {
+impl FileState {
     fn new(buf: text::TextBuffer) -> Self {
-        State {
+        FileState {
             saved: true,
             buf,
             current_file: PathBuf::new(),
+            name: dialog::input(800, 450, "Name the file", "")
         }
     }
 }
 
-fn menu_cb(m: &mut impl MenuExt){
-    if let Some(choice) = m.choice() {
-        match choice.as_str() {
-            "New Note\t" => create_file(".md"),
-            "Insert" => println!("Insert"), // This will eventually be able to insert images and other things into documents
-            "Quit\t" => {
-                println!("Quitting");
-                app::quit();
-            },
-            _ => println!("{}", choice),
-        }
-    }
-}
 
 fn main() {
     println!("Wildfire Write (C) 2023 nadichamp");
-    DeclarativeApp::new_json(1280, 720, "Wildfire Write", "resources/gui/gui.json").run(|_win| {
-        if let Some(mut wind) = app::widget_from_id::<window::DoubleWindow>("wind") {
-            wind.set_color(Color::Black);
-        }
-        if let Some(mut menubar) = app::widget_from_id::<menu::SysMenuBar>("menu_bar") {
-            menubar.add("File/New Note\t", Shortcut::None, menu::MenuFlag::Normal, menu_cb);
-            menubar.add("File/Quit\t", Shortcut::None, menu::MenuFlag::Normal, menu_cb);
-            menubar.add("File/Open\t", Shortcut::None, menu::MenuFlag::Normal, |_| {
-                let _file_to_open = open_file();
-            });
-            menubar.add("Edit/Insert\t", Shortcut::None, menu::MenuFlag::Normal, menu_cb);
+    let app = app::App::default().with_scheme(app::Scheme::Gtk);
 
-            menubar.add(
-                "Help/About\t",
-                Shortcut::None,
-                menu::MenuFlag::Normal,
-                |_| {
-                    let mut help = HelpDialog::new(0, 0, 1600, 900);
-                    let _ = help.load("resources/help/main.html");
-                    help.show();
-                    while help.shown() {
-                        app::wait();
-                    }
-                },
-            );
-            
-            menubar.add(
-                "Help/License\t",
-                Shortcut::None,
-                menu::MenuFlag::Normal,
-                |_| {
-                    let mut help_license = HelpDialog::new(0, 0, 1600, 900);
-                    let _ = help_license.load("resources/help/license.html");
-                    help_license.show();
-                    while help_license.shown() {
-                        app::wait();
-                    }
-                },
-            );
+    let mut wind = window::Window::default()
+        .with_size(WIDTH, HEIGHT)
+        .with_label("Wildfire Write");
 
-            if let Some(mut btn) = app::widget_from_id::<button::Button>("open_character_module") {
-                btn.set_callback(btn_cb);
-            }
-            if let Some(mut btn) = app::widget_from_id::<button::Button>("open_manuscript") {
-                btn.set_callback(btn_cb);
-            }
-        }
-    }).unwrap();
+    let mut bar: SysMenuBar = SysMenuBar::new(0,0, WIDTH, 25, "Wildfire Write");
+
+    init_menu(&mut bar);
+
+    let mut side_bar_wind = window::Window::new(0,25,250,HEIGHT, "");
+        &side_bar_wind.set_color(Color::Black);
+
+
+    side_bar_wind.end();
+
+    wind.end();
+    wind.show();
+
+    let buf = text::TextBuffer{};
+    let file = FileState::new(buf);
+    wind.set_callback(wind_cb);
+    app.run().unwrap();
 }
 
-fn btn_cb(b: &mut button::Button) {
-    let mut window_shown: &str = "";
-    if b.label() == "Characters" {
-        window_shown = "character"
-    } else if b.label() == "Manuscript" {
-        window_shown = "manuscript"
-    }
-    hide_int_winds(window_shown)
-}
-
-fn hide_int_winds(s: &str) {
-    if let Some(mut wind) = app::widget_from_id::<window::DoubleWindow>("character_window") {
-        if s == "character" {
-            wind.show();
-        } else {
-            wind.hide();
-        }
-    }
-    if let Some(mut wind) = app::widget_from_id::<window::DoubleWindow>("manuscript_window") {
-        if s == "manuscript" {
-            wind.show();
-            wind.set_color(Color::Magenta);
-
-            let mut buf = text::TextBuffer::default();
-            buf.set_tab_distance(4);
-            let mut ed = TextEditor::default().with_id("ed");
-            ed.set_linenumber_width(40);
-            ed.set_buffer(buf);
-            ed.set_text_font(Font::Courier);
-            ed.set_trigger(CallbackTrigger::Changed);
-            ed.set_callback(ed_cb);
-            ed.show();
-        } else {
-            wind.hide();
-        }
+fn wind_cb(_w: &mut window::Window) {
+    if app::event() == Event::Close {
+        quit_cb();
     }
 }
 
-fn ed_cb(_e: &mut text::TextEditor){
-    STATE.with(|s| s.saved = false);
+fn quit_cb () {
+    app::quit();
 }
+
