@@ -73,6 +73,12 @@ pub fn init_menu(m: &mut menu::SysMenuBar) {
         menu::MenuFlag::Normal,
         menu_cb,
     );
+    m.add(
+        "&Help/License\t",
+        Shortcut::Ctrl | 'l',
+        menu::MenuFlag::Normal,
+        menu_cb,
+    );
 }
 
 pub fn menu_cb(m: &mut impl MenuExt) {
@@ -84,14 +90,25 @@ pub fn menu_cb(m: &mut impl MenuExt) {
                 println!("Quitting");
                 app::quit();
             },
+            //displays about information
             "About\t" => {
                 let mut help = dialog::HelpDialog::new(100, 100, 600, 300);
                 //help.set_value(); // this takes html
                 dialog::HelpDialog::load(&mut help, "resources/help/about.html");
                 help.show();
                 while help.shown() {
-                app::wait();
-            }},
+                    app::wait();
+                }
+            },
+            //displays License
+            "License\t" => {
+                let mut license = dialog::HelpDialog::new(100, 100, 1600, 900);
+                dialog::HelpDialog::load(&mut license, "resources/help/license.html");
+                license.show();
+                while license.shown() {
+                    app::wait();
+                }
+            }
             _ => println!("{}", choice),
         }
     }

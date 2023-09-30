@@ -1,5 +1,6 @@
 /*
 Wildfire Write, a free and open source writing software to keep your worldbuilding organized, inspired by campfire write and world anvil.
+
 (C) 2023
 Nadichamp
 This program is free software: you can redistribute it and/or modify
@@ -62,17 +63,21 @@ fn main() {
 
     init_menu(&mut bar);
 
+    let mut character_module_wind = window::Window::new(250, 25, WIDTH-250, HEIGHT-25, "");
+    &character_module_wind.set_color(Color::Magenta);
+
+    character_module_wind.end();
     let mut side_bar_wind = window::Window::new(0,25,250,HEIGHT, "");
         &side_bar_wind.set_color(Color::Black);
 
-
     side_bar_wind.end();
+
 
     wind.end();
     wind.show();
 
-    let buf = text::TextBuffer{};
-    let file = FileState::new(buf);
+    //let buf = text::TextBuffer{};
+    //let file = FileState::new(buf);
     wind.set_callback(wind_cb);
     app.run().unwrap();
 }
